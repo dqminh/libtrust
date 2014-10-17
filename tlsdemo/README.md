@@ -5,7 +5,8 @@ This program generates key pairs and trust files for a TLS client and server.
 To generate the keys, run:
 
 ```
-$ go run genkeys.go
+$ mkdir client_data server_data
+$ go run genkeys/genkeys.go
 ```
 
 The generated files are:
@@ -30,7 +31,7 @@ The private key and public key for the client and server are stored in `private_
 To start the server, run:
 
 ```
-$ go run server.go
+$ go run server/server.go
 ```
 
 This starts an HTTPS server which listens on `localhost:8888`. The server configures itself with a certificate which is valid for both `localhost` and `127.0.0.1` and uses the key from `server_data/private_key.json`. It accepts connections from clients which present a certificate for a key that it is configured to trust from the `trusted_clients.json` file and returns a simple 'hello' message.
@@ -38,12 +39,12 @@ This starts an HTTPS server which listens on `localhost:8888`. The server config
 To make a request using the client, run:
 
 ```
-$ go run client.go
+$ go run client/client.go
 ```
 
 This command creates an HTTPS client which makes a GET request to `https://localhost:8888`. The client configures itself with a certificate using the key from `client_data/private_key.json`. It only connects to a server which presents a certificate signed by the key specified for the `localhost:8888` address from `client_data/trusted_hosts.json` and made to be used for the `localhost` hostname. If the connection succeeds, it prints the response from the server.
 
-The file `gencert.go` can be used to generate PEM encoded version of the client key and certificate. If you save them to `key.pem` and `cert.pem` respectively, you can use them with `curl` to test out the server (if it is still running).
+The file `gencert/gencert.go` can be used to generate PEM encoded version of the client key and certificate. If you save them to `key.pem` and `cert.pem` respectively, you can use them with `curl` to test out the server (if it is still running).
 
 ```
 curl --cert cert.pem --key key.pem -k https://localhost:8888
